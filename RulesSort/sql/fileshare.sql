@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-02-23 13:03:34
+Date: 2017-02-23 13:12:55
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -102,7 +102,7 @@ CREATE TABLE `userinfo` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `uname` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `access` int(11) unsigned zerofill NOT NULL DEFAULT '00000000000',
+  `access` int(11) unsigned zerofill NOT NULL DEFAULT '00000000002',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `uname` (`uname`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
