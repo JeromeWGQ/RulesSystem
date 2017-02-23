@@ -132,7 +132,7 @@ function do_getprogress() {
             $('#progressbar').css('width', 0);
             UIkit.notify("文件已经存在！请更改文件名。", {timeout: 800});
             setTimeout(function () {
-                do_showall();
+                do_showall(currentDir);
             }, 100);
             return;
         }
@@ -143,7 +143,7 @@ function do_getprogress() {
             $('#progressbar').css('width', 0);
             UIkit.notify("上传成功！", {timeout: 800});
             setTimeout(function () {
-                do_showall();
+                do_showall(currentDir);
             }, 100);
             return;
         }
@@ -154,7 +154,7 @@ function do_getprogress() {
             $('#progressbar').css('width', 0);
             UIkit.notify("系统忙，请稍后再试！", {timeout: 800});
             setTimeout(function () {
-                do_showall();
+                do_showall(currentDir);
             }, 100);
             return;
         }
@@ -187,6 +187,8 @@ function showview() {
 
 //显示全部文件
 function do_showall(dir) {
+    if (dir != null && dir != 0)
+        currentDir = dir;
     // type = 0 代表显示子目录
     // type = 1 代表显示文件
     $('#filetable').load('showfile.do', {searchcode: 0, type: 1, directory: dir});
@@ -198,7 +200,6 @@ function do_showall(dir) {
 var currentDir;
 function do_my_click(id, type) {
     UIkit.notify("id是" + id + "，类型为" + type, {timeout: 800});
-    currentDir = id;
     if (type == '0') {
         do_showall(id);
         $('#my-navi').load('updatenav.do', {newid: id});
@@ -250,14 +251,14 @@ function do_delete(filename, fileid) {
             if (data == 1) {
                 UIkit.notify("删除成功！", {timeout: 800});
                 setTimeout(function () {
-                    do_showall();
+                    do_showall(currentDir);
                 }, 100);
                 return;
             }
             if (data == 0) {
                 UIkit.notify("系统忙请稍后再试！", {timeout: 800});
                 setTimeout(function () {
-                    do_showall();
+                    do_showall(currentDir);
                 }, 100);
                 return;
             }

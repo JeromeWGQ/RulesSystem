@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FreeChart 文件共享</title>
+    <title>修改密码 - 规章管理系统</title>
     <link rel="stylesheet" type="text/css" href="./uikit/css/uikit.gradient.min.css">
     <link rel="stylesheet" type="text/css" href="./uikit/css/components/notify.gradient.min.css">
     <link rel="shortcut icon" href="img/favicon.ico">

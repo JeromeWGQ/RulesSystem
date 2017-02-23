@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -20,6 +22,7 @@ import jerome.rules.dao.FileDAO;
 import jerome.rules.entity.User;
 import jerome.rules.entity.FileInf;
 import jerome.rules.service.FileService;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.ProgressListener;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -148,6 +151,10 @@ public class ActionServlet extends HttpServlet {
             }
         }
 
+        //=======================================================
+        //    以上为用户相关操作
+        //=======================================================
+
         /**
          * 上传文件
          */
@@ -158,55 +165,63 @@ public class ActionServlet extends HttpServlet {
             if (sessionID == null || sessionID.equalsIgnoreCase(session.getId()) != true) {
                 response.sendRedirect("login.jsp");
             }
-            DiskFileItemFactory factory = new DiskFileItemFactory();//??????????
-            String uploadDir = UPLOAD_PATH;//?????????��??
-            ServletFileUpload upload = new ServletFileUpload(factory);//??????????
-            //进度管理
+            DiskFileItemFactory factory = new DiskFileItemFactory();    //创建处理工厂
+            String uploadDir = UPLOAD_PATH;                             //文件实际保存路径
+            ServletFileUpload upload = new ServletFileUpload(factory);  //创建解析器
+            //设置进度监听
             Progress progress = new Progress(session);
             upload.setProgressListener(progress);
             try {
-//                List<FileItem> items = upload.parseRequest(request);
-//                for (FileItem item : items) {
-//                    if (!item.isFormField()) {
-//                        //????????
-//                        String filename = item.getName();
-//                        filename = filename.substring(filename.lastIndexOf("\\") + 1);
-//                        //??????????
-//                        FileDAO fileDao = new FileDAO();
-//                        if (fileDao.getByFname(filename) != null) {
-//                            session.setAttribute("uploadState", "200");
-//                            return;
-//                        }
-//                        //????????��??????
-//                        int uid = (Integer) session.getAttribute("uid");
-//                        fileDao.addFile(filename, uid);
-//                        //???????��?????
-//                        InputStream in = item.getInputStream();
-//
-//                        String realPath = this.getServletContext().getRealPath(this.getServletName());
-//                        realPath = realPath.substring(0, realPath.lastIndexOf("\\"));
-//                        String uploadPath = realPath + "\\upload\\" + uploadDir;
-//
-//                        File file = new File(uploadPath, filename);
-//                        if (!file.exists()) {
-//                            file.createNewFile();
-//                        }
-//                        FileOutputStream fos = new FileOutputStream(file);
-//                        int len = -1;
-//                        byte[] buffer = new byte[1024];
-//                        while ((len = in.read(buffer)) != -1) {
-//                            fos.write(buffer, 0, len);
-//                        }
-//                        fos.close();
-//                        in.close();
-//                        item.delete();
-//                        Thread thread = new Thread(refreshFile);
-//                        thread.start();
-//                    }
-//                }
+                List<FileItem> items = upload.parseRequest(request);
+                for (FileItem item : items) {
+                    if (!item.isFormField()) {
+                        //获取文件名
+                        String filename = item.getName();
+                        filename = filename.substring((filename.lastIndexOf("\\") + 1));
+                        //查询是否重名
+                        if (FileDAO.getFileInfByName(filename) != null) {
+                            session.setAttribute("uploadState", "200");
+                            return;
+                        }
+                        //==============向数据库写入文件数据==============
+                        int fid = FileDAO.writeFileData(item.getInputStream());
+                        if (fid == -1) {
+                            session.setAttribute("uploadState", "400");
+                            return;
+                        }
+                        //==============向数据库插入文件信息==============
+                        int uid = (Integer) session.getAttribute("uid");
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        String dateStr = sdf.format(new Date());
+                        int fid1 = FileDAO.addFileRecord(filename, "1", fid + "", dateStr, uid + "");
+                        //==============插入文件所在位置信息==============
+                        Object o = session.getAttribute("currentDir");
+                        String dirCode = o.toString();
+                        FileDAO.addFileConn(dirCode, fid1 + "");
+                    }
+                }
             } catch (Exception e) {
                 session.setAttribute("uploadState", "400");
                 e.printStackTrace();
+            }
+        }
+
+        /**
+         * 上传状态反馈
+         */
+        if ("/uploadstate".equals(action)) {
+            PrintWriter out = response.getWriter();
+            //Session验证
+            HttpSession session = request.getSession();
+            String sessionID = (String) session.getAttribute("sessionID");
+            if (sessionID.equalsIgnoreCase(session.getId())) {
+                String msg = (String) session.getAttribute("uploadState");
+                if ("100".equals(msg)) {
+                    out.println("300");
+                    session.setAttribute("uploadState", "0");
+                } else {
+                    out.println(msg);
+                }
             }
         }
 
@@ -243,47 +258,6 @@ public class ActionServlet extends HttpServlet {
         }
 
         /**
-         * 获取上传状态
-         */
-        if ("/uploadstate".equals(action)) {
-            PrintWriter out = response.getWriter();
-            //Session验证
-            HttpSession session = request.getSession();
-            String sessionID = (String) session.getAttribute("sessionID");
-            if (sessionID.equalsIgnoreCase(session.getId())) {
-                String msg = (String) session.getAttribute("uploadState");
-                if ("100".equals(msg)) {
-                    out.println("300");
-                    session.setAttribute("uploadState", "0");
-                } else {
-                    out.println(msg);
-                }
-            }
-        }
-
-//        if ("/removefile".equals(action)) {
-//            PrintWriter out = response.getWriter();
-//            //Session???
-//            HttpSession session = request.getSession();
-//            String sessionID = (String) session.getAttribute("sessionID");
-//            if (sessionID.equalsIgnoreCase(session.getId())) {
-//                String fname = request.getParameter("fname");
-//                FileDAO fileDao = new FileDAO();
-//                try {
-//                    File file = new File(UPLOAD_PATH + fname);
-//                    if (fileDao.removeFile(fname) && file.delete()) {
-//                        out.println(1);
-//                        Thread thread = new Thread(refreshFile);
-//                        thread.start();
-//                    }
-//                } catch (Exception e) {
-//                    out.println(0);
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-
-        /**
          * 显示所有文件
          */
         if ("/showfile".equals(action)) {
@@ -305,6 +279,7 @@ public class ActionServlet extends HttpServlet {
                     dirCode = Integer.parseInt(directory);
                 String type = request.getParameter("type");
                 FileService.showFile(dirCode, out, access, type);
+                session.setAttribute("currentDir", dirCode);
                 return;
                 // ==================================================
             }
@@ -312,7 +287,7 @@ public class ActionServlet extends HttpServlet {
 
 
         /**
-         * ??????????
+         * 获取用户权限信息
          */
         if ("/showview".equals(action)) {
             PrintWriter out = response.getWriter();
@@ -401,9 +376,10 @@ public class ActionServlet extends HttpServlet {
             if (sessionID.equalsIgnoreCase(session.getId())) {
                 FileInf fileInf = FileDAO.getFileInfById(fileid);
                 if (fileInf.type == 1) {       //如果是文件，直接删除
-                    FileDAO.clearFile(fileid);
-                    out.print("1");
-                    return;
+                    if(FileDAO.clearFile(fileid)) {
+                        out.print("1");
+                        return;
+                    }
                 } else {                       //如果是目录，删除其中所有目录和文件
                     if (deleteOneDir(fileid)) {
                         out.print("1");

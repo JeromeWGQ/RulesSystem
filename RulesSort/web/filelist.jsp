@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FreeChart 文件共享</title>
+    <title>文件列表 - 规章管理系统</title>
     <link rel="stylesheet" type="text/css" href="./uikit/css/uikit.gradient.min.css">
     <link rel="stylesheet" type="text/css" href="./uikit/css/components/notify.gradient.min.css">
     <link rel="stylesheet" type="text/css" href="./uikit/css/components/progress.gradient.min.css">

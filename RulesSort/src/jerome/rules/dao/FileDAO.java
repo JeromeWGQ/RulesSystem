@@ -3,9 +3,11 @@ package jerome.rules.dao;
 import jerome.rules.entity.FileInf;
 import jerome.rules.util.DBUtil;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -199,13 +201,18 @@ public class FileDAO {
     public static boolean clearFile(String fileid) {
         Connection conn = null;
         PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             conn = DBUtil.getConnection();
+            ps = conn.prepareStatement("select * from myfile where id=" + fileid);
+            rs = ps.executeQuery();
+            rs.next();
+            String fId = rs.getString("fileid");
             ps = conn.prepareStatement("delete from myfile where id=" + fileid);
             if (ps.executeUpdate() > 0) {
-                ps = conn.prepareStatement("delete from myfiledata where fileid=" + fileid);
+                ps = conn.prepareStatement("delete from myfileconn where childid=" + fileid);
                 if (ps.executeUpdate() > 0) {
-                    ps = conn.prepareStatement("delete from myfileconn where childid=" + fileid);
+                    ps = conn.prepareStatement("delete from myfiledata where fileid=" + fId);
                     if (ps.executeUpdate() > 0)
                         return true;
                 }
@@ -307,6 +314,69 @@ public class FileDAO {
             DBUtil.close(conn);
         }
         return null;
+    }
+
+    /**
+     * 根据文件名获取文件信息
+     *
+     * @param filename
+     * @return
+     */
+    public static FileInf getFileInfByName(String filename) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement("select * from myfile where name='" + filename + "'");
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                FileInf file = new FileInf();
+                file.id = rs.getInt("id");
+                file.name = rs.getString("name");
+                file.type = rs.getInt("type");
+                file.fileid = rs.getInt("fileid");
+                file.createtime = rs.getString("createtime");
+                file.uid = rs.getInt("uid");
+                return file;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn);
+        }
+        return null;
+    }
+
+    /**
+     * 写入文件数据，并返回写入的id
+     *
+     * @param in
+     * @return
+     */
+    public static int writeFileData(InputStream in) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            // 写入数据库
+            String sql = "insert into myfiledata (filedata) values (?)";
+            ps = conn.prepareStatement(sql);
+            ps.setBlob(1, in);
+            ps.executeUpdate();
+            // 获取最大id并返回
+            String sql1 = "select max(fileid) from myfiledata";
+            ps = conn.prepareStatement(sql1);
+            rs = ps.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn);
+        }
+        return -1;
     }
 
 }
