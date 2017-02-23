@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-02-23 13:12:55
+Date: 2017-02-23 13:46:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,7 +27,7 @@ CREATE TABLE `myfile` (
   `createtime` varchar(255) DEFAULT NULL,
   `uid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of myfile
@@ -47,6 +47,7 @@ INSERT INTO `myfile` VALUES ('15', '中文分类4', '0', '0', '2017-02-23 12:54'
 INSERT INTO `myfile` VALUES ('16', '分类5', '0', '0', '2017-02-23 01:01', '3');
 INSERT INTO `myfile` VALUES ('17', 'fenlei6', '0', '0', '2017-02-23 01:01', '1');
 INSERT INTO `myfile` VALUES ('18', 'sort777', '0', '0', '2017-02-23 01:02', '1');
+INSERT INTO `myfile` VALUES ('19', '888', '0', '0', '2017-02-23 13:15', '1');
 
 -- ----------------------------
 -- Table structure for myfileconn
@@ -57,7 +58,7 @@ CREATE TABLE `myfileconn` (
   `fatherid` int(11) DEFAULT NULL,
   `childid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of myfileconn
@@ -75,6 +76,7 @@ INSERT INTO `myfileconn` VALUES ('10', '0', '15');
 INSERT INTO `myfileconn` VALUES ('11', '0', '16');
 INSERT INTO `myfileconn` VALUES ('12', '0', '17');
 INSERT INTO `myfileconn` VALUES ('13', '0', '18');
+INSERT INTO `myfileconn` VALUES ('14', '0', '19');
 
 -- ----------------------------
 -- Table structure for myfiledata

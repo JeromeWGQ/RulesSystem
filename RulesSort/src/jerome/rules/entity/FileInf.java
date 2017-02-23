@@ -1,4 +1,4 @@
-package jerome.entity;
+package jerome.rules.entity;
 
 /**
  * Created by Jerome on 2017/2/22.

@@ -1,7 +1,7 @@
-package jerome.dao;
+package jerome.rules.dao;
 
-import jerome.entity.FileInf;
-import util.DBUtil;
+import jerome.rules.entity.FileInf;
+import jerome.rules.util.DBUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -141,6 +141,13 @@ public class FileDAO {
         return -1;
     }
 
+    /**
+     * 添加信息至fileconn表
+     *
+     * @param fatherid
+     * @param childid
+     * @return
+     */
     public static boolean addFileConn(String fatherid, String childid) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -157,7 +164,149 @@ public class FileDAO {
         } finally {
             DBUtil.close(conn);
         }
-        return true;
+        return false;
+    }
+
+    /**
+     * 将某文件或目录父目录置为-1，不删除数据，即放入回收站
+     *
+     * @param fileid
+     * @return
+     */
+    public static boolean deleteFile(String fileid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement("update myfileconn set fatherid=-1 where childid=" + fileid);
+            if (ps.executeUpdate() > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn);
+        }
+        return false;
+    }
+
+    /**
+     * 删除某文件的全部数据
+     *
+     * @param fileid
+     * @return
+     */
+    public static boolean clearFile(String fileid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement("delete from myfile where id=" + fileid);
+            if (ps.executeUpdate() > 0) {
+                ps = conn.prepareStatement("delete from myfiledata where fileid=" + fileid);
+                if (ps.executeUpdate() > 0) {
+                    ps = conn.prepareStatement("delete from myfileconn where childid=" + fileid);
+                    if (ps.executeUpdate() > 0)
+                        return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn);
+        }
+        return false;
+    }
+
+    /**
+     * 删除某目录的全部数据（仅本身）
+     *
+     * @param fileid
+     * @return
+     */
+    public static boolean clearDir(String fileid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement("delete from myfile where id=" + fileid);
+            if (ps.executeUpdate() > 0) {
+                ps = conn.prepareStatement("delete from myfileconn where childid=" + fileid);
+                if (ps.executeUpdate() > 0)
+                    return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn);
+        }
+        return false;
+    }
+
+    /**
+     * 列出某目录下的全部子文件
+     *
+     * @param fileid
+     * @return
+     */
+    public static ArrayList<Integer> showSubFiles(String fileid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ResultSet rs1 = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement("select * from myfileconn where fatherid=" + fileid);
+            rs = ps.executeQuery();
+            ArrayList<Integer> resultList = new ArrayList<>();
+            while (rs.next()) {
+                int id = rs.getInt("childid");
+                ps = conn.prepareStatement("select * from myfile where id = " + id);
+                rs1 = ps.executeQuery();
+                rs1.next();
+                if (rs1.getInt("type") == 1)
+                    resultList.add(id);
+            }
+            return resultList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn);
+        }
+        return null;
+    }
+
+    /**
+     * 列出某目录下的全部子目录
+     *
+     * @param fileid
+     * @return
+     */
+    public static ArrayList<Integer> showSubDirs(String fileid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ResultSet rs1 = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement("select * from myfileconn where fatherid=" + fileid);
+            rs = ps.executeQuery();
+            ArrayList<Integer> resultList = new ArrayList<>();
+            while (rs.next()) {
+                int id = rs.getInt("childid");
+                ps = conn.prepareStatement("select * from myfile where id = " + id);
+                rs1 = ps.executeQuery();
+                rs1.next();
+                if (rs1.getInt("type") == 0)
+                    resultList.add(id);
+            }
+            return resultList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn);
+        }
+        return null;
     }
 
 }

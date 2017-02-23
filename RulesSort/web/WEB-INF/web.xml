@@ -7,11 +7,32 @@
     <!-- ActionServlet配置 -->
     <servlet>
         <servlet-name>ActionServlet</servlet-name>
-        <servlet-class>web.ActionServlet</servlet-class>
+        <servlet-class>jerome.rules.web.ActionServlet</servlet-class>
         <!-- 文件上传路径设置,注意值的最后面一定要加‘/’,否则会报错！ -->
         <init-param>
             <param-name>UPLOAD_PATH</param-name>
             <param-value>FileShare\</param-value>
+        </init-param>
+        <!-- 一些常量 -->
+        <init-param>
+            <param-name>ALL_SORT</param-name>
+            <param-value>全部分类</param-value>
+        </init-param>
+        <init-param>
+            <param-name>DOWNLOAD</param-name>
+            <param-value>下载</param-value>
+        </init-param>
+        <init-param>
+            <param-name>DELETE</param-name>
+            <param-value>删除</param-value>
+        </init-param>
+        <init-param>
+            <param-name>MODIFY</param-name>
+            <param-value>修改</param-value>
+        </init-param>
+        <init-param>
+            <param-name>NEW_SORT</param-name>
+            <param-value>添加新分类</param-value>
         </init-param>
         <!-- load-on-startup 指定启动时加载优先级，数字越小优先级越高，0代表不加载 -->
         <load-on-startup>2</load-on-startup>
@@ -24,7 +45,7 @@
     <!-- DBUtil初始化 -->
     <servlet>
         <servlet-name>DBUtil</servlet-name>
-        <servlet-class>util.DBUtil</servlet-class>
+        <servlet-class>jerome.rules.util.DBUtil</servlet-class>
         <init-param>
             <param-name>DB_DRIVER</param-name>
             <param-value>com.mysql.jdbc.Driver</param-value>

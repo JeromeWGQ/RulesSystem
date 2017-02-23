@@ -1,23 +1,30 @@
-// 页面中的业务逻辑表单提交等
+//===========================================
+//    自己定义的一些js函数
+//===========================================
 
+/**
+ * 页面中的业务逻辑表单提交等，待修改
+ */
 $(function () {
-    $(document).keydown(function (event) {
+    $('#login').keydown(function (event) {
         if (event.keyCode == 13) {
             $('#submit').click();
         }
     });
 });
 
+//======================================================
+//    登录注册相关函数
+//======================================================
+
 // 提交登录信息
 function login_submit() {
-
     var username = $('#username').val();
     var password = $.md5($('#password').val());//对密码进行MD5加密
-
     $.post('login.do', 'username=' + username + "&password=" + password,
         function (data) {
             if (data == 1) {
-                self.location = "filelist.jsp"
+                self.location = "filelist.jsp";
             } else {
                 UIkit.notify("用户名或密码错误！", {timeout: 800});
                 $('#password').val('');
@@ -27,17 +34,14 @@ function login_submit() {
 
 // 提交修改密码的信息
 function chpwd_submit() {
-
     var username = $('#username').val();
     var oldpwd = $.md5($('#oldpwd').val());//对密码进行MD5加密
     var newpwd_1 = $('#newpwd_1').val();
     var newpwd_2 = $('#newpwd_2').val();
-
     if (newpwd_1.length < 5 || newpwd_2.length < 5) {
         UIkit.notify("密码必须大于5位！", {timeout: 800});
         return;
     }
-
     if (newpwd_1 == newpwd_2) {
         $.post('login.do', 'username=' + username + "&password=" + oldpwd,
             function (data) {
@@ -66,16 +70,13 @@ function chpwd_submit() {
 
 //提交注册信息
 function regist_submit() {
-
     var username = $('#username').val();
     var pwd_1 = $('#pwd_1').val();
     var pwd_2 = $('#pwd_2').val();
-
     if (pwd_1.length < 5 || pwd_2.length < 5 || username.length < 5) {
         UIkit.notify("用户名或密码必须大于5位！", {timeout: 800});
         return;
     }
-
     if (pwd_1 == pwd_2) {
         $.post('hasname.do', 'username=' + username,
             function (data) {
@@ -101,18 +102,10 @@ function regist_submit() {
     }
 }
 
-//根据权限显示相应功能
-function showview() {
-    $.post('showview.do', function (data) {
-        if (data == 1) {
-            $('.del').addClass('uk-hidden');
-        }
-        if (data == 0) {
-            $('.del').addClass('uk-hidden');
-            $('#uploadview').addClass('uk-hidden');
-        }
-    });
-}
+//======================================================
+//    以上是登录注册相关函数
+//======================================================
+
 
 //上传文件
 var IntervalID;
@@ -178,6 +171,20 @@ function do_search() {
     showview();
 }
 
+
+//============================================
+//    以下为新增代码
+//============================================
+
+//根据权限隐藏上传功能
+function showview() {
+    $.post('showview.do', function (data) {
+        if (data == 0) {
+            $('#uploadview').addClass('uk-hidden');
+        }
+    });
+}
+
 //显示全部文件
 function do_showall(dir) {
     // type = 0 代表显示子目录
@@ -188,31 +195,6 @@ function do_showall(dir) {
     showview();
 }
 
-//删除文件
-function do_delete(filename) {
-    if (confirm("确定要删除 " + filename + " 吗？")) {
-        $.post('removefile.do', 'fname=' + filename, function (data) {
-            if (data == 1) {
-                UIkit.notify("删除成功！", {timeout: 800});
-                setTimeout(function () {
-                    do_showall();
-                }, 100);
-                return;
-            }
-            if (data == 0) {
-                UIkit.notify("系统忙请稍后再试！", {timeout: 800});
-                setTimeout(function () {
-                    do_showall();
-                }, 100);
-                return;
-            }
-        });
-    }
-}
-
-//============================================
-//    以下为新增代码
-//============================================
 var currentDir;
 function do_my_click(id, type) {
     UIkit.notify("id是" + id + "，类型为" + type, {timeout: 800});
@@ -259,4 +241,26 @@ function do_new_sort() {
 function cancel_new_sort() {
     $('#sorttable').load('showfile.do', {searchcode: 0, type: 0, directory: currentDir});
     showview();
+}
+
+//删除文件或目录
+function do_delete(filename, fileid) {
+    if (confirm("确定要删除 " + filename + " 吗？")) {
+        $.post('clearfile.do', {fileid: fileid}, function (data) {
+            if (data == 1) {
+                UIkit.notify("删除成功！", {timeout: 800});
+                setTimeout(function () {
+                    do_showall();
+                }, 100);
+                return;
+            }
+            if (data == 0) {
+                UIkit.notify("系统忙请稍后再试！", {timeout: 800});
+                setTimeout(function () {
+                    do_showall();
+                }, 100);
+                return;
+            }
+        });
+    }
 }

@@ -1,24 +1,14 @@
-package entity;
+package jerome.rules.entity;
 
 /**
- * ÓÃ»§ĞÅÏ¢Àà
- * Ìá¹©ÓÃ»§ĞÅÏ¢µÄget()ºÍset()·½·¨ÒÔ¼°toString()·½·¨
- *
- * @author Snail
+ * Created by Jerome on 2017/2/23.
  */
 public class User {
 
-    private int uid;            //ÓÃ»§ID
-    private String uname;        //ÓÃ»§Ãû
-    private String password;    //ÃÜÂë
-    private int access;            //È¨ÏŞ
-
-    /**
-     * ÖØĞ´toString·½·¨
-     */
-    public String toString() {
-        return uid + " " + uname + " " + password + " " + access;
-    }
+    private int uid;            //ç”¨æˆ·ID
+    private String uname;       //ç”¨æˆ·å
+    private String password;    //å¯†ç 
+    private int access;         //æƒé™
 
     public int getUid() {
         return uid;
@@ -51,5 +41,4 @@ public class User {
     public void setAccess(int access) {
         this.access = access;
     }
-
 }

@@ -18,25 +18,26 @@
     <link rel="stylesheet" type="text/css" href="./uikit/css/components/progress.gradient.min.css">
     <link rel="stylesheet" type="text/css" href="./uikit/css/components/placeholder.gradient.min.css">
     <link rel="stylesheet" type="text/css" href="./uikit/css/components/form-file.gradient.min.css">
-    <link rel="shortcut icon" href="./favicon.ico">
+    <link rel="shortcut icon" href="img/favicon.ico">
     <script type="text/javascript" src="./uikit/js/jquery.js"></script>
     <script type="text/javascript" src="./uikit/js/uikit.min.js"></script>
     <script type="text/javascript" src="./uikit/js/components/notify.min.js"></script>
     <script type="text/javascript" src="./uikit/js/my.js"></script>
     <script type="text/javascript">
         $(function () {
-            do_my_click('0','0');
-            showview();
+            do_my_click('0', '0');
         });
     </script>
 </head>
+
 <body class="uk-height-1-1">
 
 <!-- 导航区 -->
 <div class="uk-navbar" data-uk-sticky="{clsactive:uk-navbar-attached}">
     <div class="uk-container uk-container-center">
         <ul class="uk-navbar-nav">
-            <li class="uk-visible-large"><a href="https://coding.net/u/xtliuke/p/FileShare/git" target="_blank">关于</a>
+            <li class="uk-visible-large"><a href="https://github.com/JeromeWGQ/RulesSystem/"
+                                            target="_blank">关于</a>
             </li>
         </ul>
         <a href="#offcanvas" data-uk-offcanvas class="uk-navbar-toggle uk-hidden-large"></a>
@@ -53,10 +54,6 @@
         </div>
     </div>
 </div>
-
-<%--<div class="uk-block uk-block-secondary">--%>
-
-<%--</div>--%>
 
 <!-- 上传区 -->
 <div id="uploadview"
@@ -76,9 +73,7 @@
             <iframe name="hidden_frame" id="hidden_frame" style="display: none"></iframe>
         </form>
     </div>
-
 </div>
-
 
 <!-- 文件区 -->
 <div class="uk-container uk-container-center">
@@ -98,6 +93,15 @@
         </thead>
         <tbody id="sorttable">
         <!-- 访问服务器获得表格数据 -->
+        <tr>
+            <td>
+                <div style="width: 300px;" class="uk-text-truncate"><a onclick="do_my_click(0,0)">这里显示目录名</a></div>
+            </td>
+            <td>修改者名称</td>
+            <td>显示修改时间</td>
+            <td><a class="uk-button uk-button-danger uk-button-mini" onclick="do_delete(0);">删除</a><span>&nbsp;&nbsp;&nbsp;</span>
+            </td>
+        </tr>
         </tbody>
     </table>
     <!-- 文件列表 -->
@@ -105,28 +109,29 @@
         <thead class="uk-text-bold">
         <tr>
             <td>文件名</td>
-            <td>上传者</td>
-            <td>上传时间</td>
+            <td>修改者</td>
+            <td>修改时间</td>
             <td>操作</td>
         </tr>
         </thead>
         <tbody id="filetable">
         <!-- 访问服务器获得表格数据 -->
+        <tr>
+            <td>
+                <div style="width: 300px;" class="uk-text-truncate"><a onclick="do_my_click(0,0)">这里显示目录名</a></div>
+            </td>
+            <td>修改者名称</td>
+            <td>显示修改时间</td>
+            <td><a class="uk-button uk-button-danger uk-button-mini" onclick="do_delete(0);">删除</a><span>&nbsp;&nbsp;&nbsp;</span>
+            </td>
+        </tr>
         </tbody>
     </table>
-</div>
-<!-- 小屏幕设备(手机) -->
-<%--<table class="uk-table uk-table-striped uk-hidden-large">--%>
-<%--<thead class="uk-text-bold"><tr><td>文件名</td><td>操作</td></tr></thead>--%>
-<%--<tbody id="filetable_small">--%>
-<%--<!-- 访问服务器获得表格数据 -->--%>
-<%--</tbody>--%>
-<%--</table>--%>
 </div>
 
 <div class="uk-container uk-container-center uk-text-center">
     <p class="uk-visible-large"></p>
-    <em class="uk-text-small uk-text-primary uk-text-bottom">Create&nbsp;By:&nbsp;蜗牛&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xtliuke@sina.com</em>
+    <em class="uk-text-small uk-text-primary uk-text-bottom">Create&nbsp;By:&nbsp;jerome&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wfdwgq2013@126.com</em>
 </div>
 
 <!-- 侧边导航区(小页面和手机版使用) -->
@@ -134,9 +139,10 @@
     <div class="uk-offcanvas-bar">
         <ul class="uk-nav uk-nav-offcanvas">
             <li><a href="logout.do">退出</a></li>
-            <li><a href="https://coding.net/u/xtliuke/p/FileShare/git" target="_blank">关于</a></li>
+            <li><a href="https://github.com/JeromeWGQ/RulesSystem/" target="_blank">关于</a></li>
         </ul>
     </div>
 </div>
+
 </body>
 </html>

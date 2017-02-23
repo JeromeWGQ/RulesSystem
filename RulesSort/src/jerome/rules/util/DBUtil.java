@@ -1,4 +1,4 @@
-package util;
+package jerome.rules.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,33 +7,33 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 /**
- * Êı¾İ¿âÁ¬½ÓÀà
- * Ê¹ÓÃHttpServlet½«Á¬½Ó²ÎÊı´«µİ¸øDBUtil
- * Ìá¹©»ñÈ¡Êı¾İ¿âÁ¬½ÓºÍ¹Ø±ÕÁ¬½Ó¹¦ÄÜ
+ * æ•°æ®åº“è¿æ¥ç±»
+ * ä½¿ç”¨HttpServletå°†è¿æ¥å‚æ•°ä¼ é€’ç»™DBUtil
+ * æä¾›è·å–æ•°æ®åº“è¿æ¥å’Œå…³é—­è¿æ¥åŠŸèƒ½
  *
  * @author Snail
  */
 public class DBUtil extends HttpServlet {
 
-    private static String DB_DRIVER = "";    //Êı¾İ¿âÇı¶¯
-    private static String DB_URL = "";        //Êı¾İ¿âµØÖ·
-    private static String DB_USER = "";        //Êı¾İ¿âÓÃ»§Ãû
-    private static String DB_PASSWD = "";    //Êı¾İ¿âÃÜÂë
+    private static String DB_DRIVER = "";       //æ•°æ®åº“é©±åŠ¨
+    private static String DB_URL = "";          //æ•°æ®åº“åœ°å€
+    private static String DB_USER = "";         //æ•°æ®åº“ç”¨æˆ·å
+    private static String DB_PASSWD = "";       //æ•°æ®åº“å¯†ç 
 
     /**
-     * Ê¹ÓÃHttpServlet½«Á¬½Ó²ÎÊı´«µİ¸øDBUtil
+     * ä½¿ç”¨HttpServletå°†è¿æ¥å‚æ•°ä¼ é€’ç»™DBUtil
      */
     public void init() throws ServletException {
         super.init();
-        DB_DRIVER = this.getInitParameter("DB_DRIVER");    //ÉèÖÃÇı¶¯
-        DB_URL = this.getInitParameter("DB_URL");        //ÉèÖÃÁ¬½Ó
-        DB_USER = this.getInitParameter("DB_USER");        //ÉèÖÃÓÃ»§Ãû
-        DB_PASSWD = this.getInitParameter("DB_PASSWD");    //ÉèÖÃÃÜÂë
+        DB_DRIVER = this.getInitParameter("DB_DRIVER");     //è®¾ç½®é©±åŠ¨
+        DB_URL = this.getInitParameter("DB_URL");           //è®¾ç½®è¿æ¥
+        DB_USER = this.getInitParameter("DB_USER");         //è®¾ç½®ç”¨æˆ·å
+        DB_PASSWD = this.getInitParameter("DB_PASSWD");     //è®¾ç½®å¯†ç 
     }
 
     /**
-     * Ìá¹©Êı¾İ¿âÁ¬½ÓµÄ·½·¨
-     * ·µ»ØÒ»¸öÊı¾İ¿âµÄÁ¬½Ó
+     * æä¾›æ•°æ®åº“è¿æ¥çš„æ–¹æ³•
+     * è¿”å›ä¸€ä¸ªæ•°æ®åº“çš„è¿æ¥
      *
      * @return
      * @throws Exception
@@ -51,8 +51,8 @@ public class DBUtil extends HttpServlet {
     }
 
     /**
-     * ¹Ø±ÕÊı¾İ¿âÁ¬½Ó
-     * ĞèÒªÌá¹©Á¬½Ó¶ÔÏó
+     * å…³é—­æ•°æ®åº“è¿æ¥
+     * éœ€è¦æä¾›è¿æ¥å¯¹è±¡
      *
      * @param conn
      * @return
