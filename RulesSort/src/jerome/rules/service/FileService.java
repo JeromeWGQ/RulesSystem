@@ -91,7 +91,7 @@ public class FileService {
                                 "<td><div style=\"width: 300px;\" class=\"uk-text-truncate\"><a onclick=\"do_my_click(" + file.id + ",1)\">" + file.name + "</a></div></td>\n" +
                                 "<td>" + user.getUname() + "</td>\n" +
                                 "<td>" + file.createtime + "</td>\n" +
-                                "<td><a class=\"uk-button uk-button-success uk-button-mini\" onclick=\"do_delete('" + file.name + "','" + file.id + "');\">" + ActionServlet.DOWNLOAD + "</a><span>&nbsp</span>\n" +
+                                "<td><a class=\"uk-button uk-button-success uk-button-mini\" href=\"download.do?fid=" + file.id + "\">" + ActionServlet.DOWNLOAD + "</a><span>&nbsp</span>\n" +
                                 "<a class=\"uk-button uk-button-primary uk-button-mini\" onclick=\"do_delete('" + file.name + "','" + file.id + "');\">" + ActionServlet.MODIFY + "</a><span>&nbsp</span>\n" +
                                 "<a class=\"uk-button uk-button-danger uk-button-mini\" onclick=\"do_delete('" + file.name + "','" + file.id + "');\">" + ActionServlet.DELETE + "</a><span>&nbsp;&nbsp;&nbsp;</span></td>\n" +
                                 "</tr>";

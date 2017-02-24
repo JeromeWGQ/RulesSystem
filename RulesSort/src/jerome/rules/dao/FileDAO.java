@@ -4,10 +4,7 @@ import jerome.rules.entity.FileInf;
 import jerome.rules.util.DBUtil;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -377,6 +374,31 @@ public class FileDAO {
             DBUtil.close(conn);
         }
         return -1;
+    }
+
+    /**
+     * 读出文件数据
+     *
+     * @param fid
+     */
+    public static InputStream readFileData(int fid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            //从数据库读取文件信息
+            ps = conn.prepareStatement("select filedata from myfiledata,myfile where myfile.fileid=myfiledata.fileid and myfile.id=" + fid);
+            rs = ps.executeQuery();
+            rs.next();
+            Blob blob = rs.getBlob(1);
+            return blob.getBinaryStream();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn);
+        }
+        return null;
     }
 
 }

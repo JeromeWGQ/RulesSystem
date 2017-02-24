@@ -25,7 +25,7 @@
     <script type="text/javascript" src="./uikit/js/my.js"></script>
     <script type="text/javascript">
         $(function () {
-            do_my_click('0', '0');
+            do_my_click(0, 0);
         });
     </script>
 </head>

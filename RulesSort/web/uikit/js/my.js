@@ -1,3 +1,4 @@
+var currentDir = 0;
 //===========================================
 //    自己定义的一些js函数
 //===========================================
@@ -164,19 +165,19 @@ function do_getprogress() {
         }
     });
 }
-
 // 搜索
+//============================================
+//    以下为新增代码
+//============================================
+
+//根据权限隐藏上传功能
+//显示全部文件
 function do_search() {
     $('#filetable').load('showfile.do', 'searchcode=' + $('#searchcode').val());
     showview();
 }
 
 
-//============================================
-//    以下为新增代码
-//============================================
-
-//根据权限隐藏上传功能
 function showview() {
     $.post('showview.do', function (data) {
         if (data == 0) {
@@ -185,24 +186,21 @@ function showview() {
     });
 }
 
-//显示全部文件
-function do_showall(dir) {
-    if (dir != null && dir != 0)
-        currentDir = dir;
+function do_showall(id) {
     // type = 0 代表显示子目录
     // type = 1 代表显示文件
-    $('#filetable').load('showfile.do', {searchcode: 0, type: 1, directory: dir});
-    $('#sorttable').load('showfile.do', {searchcode: 0, type: 0, directory: dir});
+    $('#filetable').load('showfile.do', {searchcode: 0, type: 1, directory: id});
+    $('#sorttable').load('showfile.do', {searchcode: 0, type: 0, directory: id});
     // $('#filetable_small').load('showfilesmall.do');
     showview();
 }
 
-var currentDir;
 function do_my_click(id, type) {
     UIkit.notify("id是" + id + "，类型为" + type, {timeout: 800});
     if (type == '0') {
         do_showall(id);
         $('#my-navi').load('updatenav.do', {newid: id});
+        currentDir = id;
     }
 }
 
@@ -216,14 +214,13 @@ function new_sort_dialog() {
 }
 
 function do_new_sort() {
-    var dir = currentDir;
     var name = $('#sortname').val();
-    UIkit.notify("确定添加：" + dir + "，" + name, {timeout: 800});
-    $.post('newsort.do', {sortname: name, dir: dir}, function (code) {
+    UIkit.notify("确定添加：" + currentDir + "，" + name, {timeout: 800});
+    $.post('newsort.do', {sortname: name, dir: currentDir}, function (code) {
         if (code == 1) {
             UIkit.notify("添加成功！", {timeout: 800});
             setTimeout(function () {
-                $('#sorttable').load('showfile.do', {searchcode: 0, type: 0, directory: dir});
+                $('#sorttable').load('showfile.do', {searchcode: 0, type: 0, directory: currentDir});
                 showview();
             }, 100);
             return;
@@ -231,7 +228,7 @@ function do_new_sort() {
         if (code == 0) {
             UIkit.notify("系统忙请稍后再试！", {timeout: 800});
             setTimeout(function () {
-                $('#sorttable').load('showfile.do', {searchcode: 0, type: 0, directory: dir});
+                $('#sorttable').load('showfile.do', {searchcode: 0, type: 0, directory: currentDir});
                 showview();
             }, 100);
             return;
@@ -264,4 +261,8 @@ function do_delete(filename, fileid) {
             }
         });
     }
+}
+
+function do_mofidy() {
+
 }

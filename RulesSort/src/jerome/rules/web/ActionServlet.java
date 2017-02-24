@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.FileAlreadyExistsException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -229,7 +230,7 @@ public class ActionServlet extends HttpServlet {
          * 下载文件
          */
         if ("/download".equals(action)) {
-            //Session???
+            //Session验证
             HttpSession session = request.getSession();
             String Path = (String) session.getAttribute("Path");
             if (Path == "" || Path == null) {
@@ -237,13 +238,14 @@ public class ActionServlet extends HttpServlet {
                 return;
             }
             try {
+                String fid = request.getParameter("fid");
                 response.setCharacterEncoding("utf-8");
-                String downpath = Path + request.getParameter("fname");
-                File file = new File(downpath);
-                InputStream in = new FileInputStream(file);
+                InputStream in = FileDAO.readFileData(Integer.parseInt(fid));
+                if (in == null)
+                    return;
                 OutputStream fos = response.getOutputStream();
-                response.addHeader("Content-Disposition", "attachment;filename=" + new String(file.getName().getBytes("gbk"), "iso-8859-1"));
-                response.addHeader("Content-Length", file.length() + "");
+                response.addHeader("Content-Disposition", "attachment;filename=" + FileDAO.getFileInfById(fid).name);
+                response.addHeader("Content-Length", in.available() + "");
                 response.setContentType("application/octet-stream");
                 int len = -1;
                 byte[] buffer = new byte[1024];
@@ -376,7 +378,7 @@ public class ActionServlet extends HttpServlet {
             if (sessionID.equalsIgnoreCase(session.getId())) {
                 FileInf fileInf = FileDAO.getFileInfById(fileid);
                 if (fileInf.type == 1) {       //如果是文件，直接删除
-                    if(FileDAO.clearFile(fileid)) {
+                    if (FileDAO.clearFile(fileid)) {
                         out.print("1");
                         return;
                     }
